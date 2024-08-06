@@ -1,0 +1,35 @@
+services:
+  db:
+    image: registry-docker.weg.net/postgres:latest
+    restart: unless-stopped
+    ports:
+      - ${WEBSOCKET_DB_PORT}:5432
+    environment:
+      POSTGRES_DB: ${WEBSOCKET_DB_NAME}
+      POSTGRES_USER: ${WEBSOCKET_DB_USER}
+      POSTGRES_PASSWORD: ${WEBSOCKET_DB_PASSWORD}
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  pgadmin:
+    image: registry-docker.weg.net/dpage/pgadmin4:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - 8081:80
+    environment:
+      # PGADMIN_DEFAULT_EMAIL: ${WEBSOCKET_PGADMIN_EMAIL}
+      # PGADMIN_DEFAULT_PASSWORD: ${WEBSOCKET_PGADMIN_PASSWORD}
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
+volumes:
+  db:
+    driver: local
+  pgadmin:
+    driver: local
+
+# --optionsal
